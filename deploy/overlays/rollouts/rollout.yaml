@@ -14,9 +14,9 @@ spec:
         app: gobg
     spec:
       containers:
-      - name: gobg
-        image: christianh814/gobg:latest
-        imagePullPolicy: IfNotPresent
+        - name: gobg
+          image: christianh814/gobg:f16b65
+          imagePullPolicy: IfNotPresent
   strategy:
     blueGreen:
       activeService: gobg-active
