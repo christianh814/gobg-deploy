@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: gobg
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: gobg
+  template:
+    metadata:
+      labels:
+        app: gobg
+    spec:
+      containers:
+      - name: gobg
+        image: christianh814/gobg:latest
+        imagePullPolicy: IfNotPresent
+  strategy:
+    blueGreen:
+      activeService: gobg-active
+      previewService: gobg-preview
+      autoPromotionSeconds: 5
