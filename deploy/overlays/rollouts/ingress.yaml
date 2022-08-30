@@ -15,7 +15,7 @@ spec:
       paths:
       - backend:
           service:
-            name: gobg
+            name: gobg-active
             port:
               number: 8080
         path: /
