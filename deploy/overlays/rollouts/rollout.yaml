@@ -21,4 +21,4 @@ spec:
     blueGreen:
       activeService: gobg-active
       previewService: gobg-preview
-      autoPromotionSeconds: 10
+      autoPromotionSeconds: 15
