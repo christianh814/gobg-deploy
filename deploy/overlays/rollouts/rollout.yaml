@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gobg
-          image: christianh814/gobg:f3265a #af830e
+          image: christianh814/gobg:af830e #f3265a
           imagePullPolicy: IfNotPresent
   strategy:
     blueGreen:
