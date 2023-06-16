@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
 - ingress.yaml
 - ../../base
+images:
+- name: christianh814/gobg
+  newTag: fa4d69
