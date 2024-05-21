@@ -3,3 +3,7 @@ kind: Kustomization
 
 resources:
 - ../../base
+
+images:
+- name: christianh814/gobg
+  newTag: "blue"
