@@ -18,4 +18,4 @@ patchesJson6902:
     version: v1
 images:
 - name: christianh814/gobg
-  newTag: "blue"
+  newTag: "green"
