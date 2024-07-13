@@ -14,11 +14,26 @@ jobs:
         uses: actions/checkout@v4
       - name: List files in the repository
         run: |
-          echo ${{ github.event.pull_request.number }}
-          echo ${{ secrets.AKUITY_KEY_ID }}
-          echo ${{ secrets.AKUITY_KEY_SECRET }}
-          echo ${{ secrets.AKUITY_INSTANCE_NAME }}
-          echo ${{ secrets.AKUITY_ORG_NAME }}
+          cat <<-EOF
+          apiVersion: management.loft.sh/v1
+          kind: VirtualClusterInstance
+          metadata:
+            name: gobg-preview-${{ github.event.pull_request.number }}
+            namespace: loft-p-vcluster-demo # Project is called vcluster-demo
+          spec:
+            displayName: gobg-preview-${{ github.event.pull_request.number }}
+            owner:
+              user: admin
+            templateRef:
+              name: vcluster-akuity-template
+            parameters: |
+              prnumber: "${{ github.event.pull_request.number }}"
+              akuityKeyId: "${{ secrets.AKUITY_KEY_ID }}"
+              akuityKeySecret: "${{ secrets.AKUITY_KEY_SECRET }}"
+              akuityOrgName: "${{ secrets.AKUITY_ORG_NAME }}"
+              akuityInstanceName: "${{ secrets.AKUITY_INSTANCE_NAME }}"
+          EOF
+          echo '================================'
           echo ${{ secrets.PUBLIC_K8S_CONFIG }}
           echo '================================'
           echo ${{ secrets.PUBLIC_K8S_CONFIG }} | base64 -d
