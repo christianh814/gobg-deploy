@@ -16,7 +16,7 @@ jobs:
         run: |
           echo -n ${{ secrets.PUBLIC_K8S_CONFIG }} | base64 -d > kubeconfig.yaml
           export KUBECONFIG=kubeconfig.yaml
-          cat <<-EOF
+          kubectl apply -f - <<-EOF
           apiVersion: management.loft.sh/v1
           kind: VirtualClusterInstance
           metadata:
@@ -35,6 +35,4 @@ jobs:
               akuityOrgName: "${{ secrets.AKUITY_ORG_NAME }}"
               akuityInstanceName: "${{ secrets.AKUITY_INSTANCE_NAME }}"
           EOF
-          echo '================================'
-          kubectl auth whoami
-          echo '================================'
+          echo ""
