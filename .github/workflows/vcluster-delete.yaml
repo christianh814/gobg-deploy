@@ -1,0 +1,36 @@
+name: vCluster Instance Delete
+
+on:
+  pull_request:
+    types: 
+      - closed
+    branches: 
+      - main
+
+jobs:
+  delete-vcluster-instance:
+    if: ${{ github.event.pull_request.merged == true && github.event.label.name == 'preview' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Create vCluster for the Pull Request
+        run: |
+          ## Download the Akuity CLI
+          arch=$(uname -m)
+          ver=v0.15.0
+          [[ ${arch} == "x86_64" ]] && arch=amd64
+          [[ ${arch} == "aarch64" ]] && arch=arm64
+          wget -O /usr/local/bin/akuity "https://dl.akuity.io/akuity-cli/${ver}/linux/${arch}/akuity"
+          chmod +x /usr/local/bin/akuity
+
+          ## Export Akuity Keys for the CLI
+          export AKUITY_API_KEY_ID=${{ secrets.AKUITY_KEY_ID }}
+          export AKUITY_API_KEY_SECRET=${{ secrets.AKUITY_KEY_SECRET }}
+
+          ## Delete Akuity cluster definition
+          akuity argocd cluster delete --organization-name=${{ secrets.AKUITY_ORG_NAME }} --instance-name=${{ secrets.AKUITY_INSTANCE_NAME }} gobg-preview-${{ github.event.pull_request.number }} 
+
+          echo -n ${{ secrets.PUBLIC_K8S_CONFIG }} | base64 -d > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl delete virtualclusterinstance gobg-preview-${{ github.event.pull_request.number }} -n loft-p-vcluster-demo
