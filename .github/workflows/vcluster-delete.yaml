@@ -9,7 +9,7 @@ on:
 
 jobs:
   delete-vcluster-instance:
-    if: ${{ github.event.pull_request.merged == true && github.event.label.name == 'preview' }}
+    if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
