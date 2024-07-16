@@ -6,4 +6,4 @@ resources:
 
 images:
 - name: christianh814/gobg
-  newTag: "green"
+  newTag: "pink"
