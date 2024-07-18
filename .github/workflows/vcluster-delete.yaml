@@ -12,8 +12,6 @@ jobs:
     if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
       - name: Create vCluster for the Pull Request
         run: |
           ## Download the Akuity CLI
@@ -24,6 +22,11 @@ jobs:
           wget -O /usr/local/bin/akuity "https://dl.akuity.io/akuity-cli/${ver}/linux/${arch}/akuity"
           chmod +x /usr/local/bin/akuity
 
+          ## Download vCluster CLI
+          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/download/v0.20.0-beta.12/vcluster-linux-amd64"
+          mv vcluster /usr/local/bin
+          chmod +x /usr/local/bin/vcluster
+
           ## Export Akuity Keys for the CLI
           export AKUITY_API_KEY_ID=${{ secrets.AKUITY_KEY_ID }}
           export AKUITY_API_KEY_SECRET=${{ secrets.AKUITY_KEY_SECRET }}
@@ -31,6 +34,8 @@ jobs:
           ## Delete Akuity cluster definition
           akuity argocd cluster delete --organization-name=${{ secrets.AKUITY_ORG_NAME }} --instance-name=${{ secrets.AKUITY_INSTANCE_NAME }} gobg-preview-${{ github.event.pull_request.number }} 
 
-          echo -n ${{ secrets.PUBLIC_K8S_CONFIG }} | base64 -d > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
-          kubectl delete virtualclusterinstance gobg-preview-${{ github.event.pull_request.number }} -n loft-p-vcluster-demo
+          ## Login to instance
+          vcluster login --insecure ${VCLUSTER_PRO_HOSTNAME} --access-key ${LOFT_ACCESS_KEY}
+
+          ## Delete vCluster Instance
+          vcluster delete gobg-preview-${{ github.event.pull_request.number }} --project ${VCLUSTER_PRO_PROJECT} --ignore-not-found --driver platform

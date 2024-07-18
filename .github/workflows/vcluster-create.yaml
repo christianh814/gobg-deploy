@@ -10,29 +10,21 @@ jobs:
     if: ${{ github.event.label.name == 'preview' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
       - name: Create vCluster for the Pull Request
         run: |
-          echo -n ${{ secrets.PUBLIC_K8S_CONFIG }} | base64 -d > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
-          kubectl apply -f - <<-EOF
-          apiVersion: management.loft.sh/v1
-          kind: VirtualClusterInstance
-          metadata:
-            name: gobg-preview-${{ github.event.pull_request.number }}
-            namespace: loft-p-vcluster-demo
-          spec:
-            displayName: gobg-preview-${{ github.event.pull_request.number }}
-            owner:
-              user: admin
-            templateRef:
-              name: vcluster-akuity-template
-            parameters: |
-              prnumber: "${{ github.event.pull_request.number }}"
-              akuityKeyId: "${{ secrets.AKUITY_KEY_ID }}"
-              akuityKeySecret: "${{ secrets.AKUITY_KEY_SECRET }}"
-              akuityOrgName: "${{ secrets.AKUITY_ORG_NAME }}"
-              akuityInstanceName: "${{ secrets.AKUITY_INSTANCE_NAME }}"
-          EOF
-          echo ""
+          ## Download vCluster CLI
+          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/download/v0.20.0-beta.12/vcluster-linux-amd64" 
+          mv vcluster /usr/local/bin 
+          chmod +x /usr/local/bin/vcluster
+
+          ## Login to instance
+          vcluster login --insecure ${VCLUSTER_PRO_HOSTNAME} --access-key ${LOFT_ACCESS_KEY}
+
+          ## Create Instance
+          vcluster create gobg-preview-${{ github.event.pull_request.number }} \
+          --project ${VCLUSTER_PRO_PROJECT} --recreate --driver platform --template ${VCLUSTER_PRO_TEMPLATE} \
+          --set-param prnumber="${{ github.event.pull_request.number }}" \
+          --set-param akuityKeyId="${{ secrets.AKUITY_KEY_ID }}" \
+          --set-param akuityKeySecret="${{ secrets.AKUITY_KEY_SECRET }}" \
+          --set-param akuityOrgName="${{ secrets.AKUITY_ORG_NAME }}" \
+          --set-param akuityInstanceName="${{ secrets.AKUITY_INSTANCE_NAME }}"
