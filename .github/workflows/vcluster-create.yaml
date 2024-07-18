@@ -18,11 +18,11 @@ jobs:
           chmod +x /usr/local/bin/vcluster
 
           ## Login to instance
-          vcluster login --insecure ${VCLUSTER_PRO_HOSTNAME} --access-key ${LOFT_ACCESS_KEY}
+          vcluster login --insecure ${{ secrets.VCLUSTER_PRO_HOSTNAME }} --access-key ${{ secrets.AKUITY_KEY_ID }}
 
           ## Create Instance
           vcluster create gobg-preview-${{ github.event.pull_request.number }} \
-          --project ${VCLUSTER_PRO_PROJECT} --recreate --driver platform --template ${VCLUSTER_PRO_TEMPLATE} \
+          --project ${{ secrets.VCLUSTER_PRO_PROJECT }} --recreate --driver platform --template ${{ secrets.VCLUSTER_PRO_TEMPLATE }} \
           --set-param prnumber="${{ github.event.pull_request.number }}" \
           --set-param akuityKeyId="${{ secrets.AKUITY_KEY_ID }}" \
           --set-param akuityKeySecret="${{ secrets.AKUITY_KEY_SECRET }}" \
