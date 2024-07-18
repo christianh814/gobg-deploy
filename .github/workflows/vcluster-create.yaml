@@ -18,7 +18,7 @@ jobs:
           chmod +x /usr/local/bin/vcluster
 
           ## Login to instance
-          vcluster login --insecure ${{ secrets.VCLUSTER_PRO_HOSTNAME }} --access-key ${{ secrets.AKUITY_KEY_ID }}
+          vcluster login --insecure ${{ secrets.VCLUSTER_PRO_HOSTNAME }} --access-key ${{ secrets.LOFT_ACCESS_KEY }}
 
           ## Create Instance
           vcluster create gobg-preview-${{ github.event.pull_request.number }} \
