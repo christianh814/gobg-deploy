@@ -21,7 +21,7 @@ jobs:
           vcluster login --insecure ${{ secrets.VCLUSTER_PRO_HOSTNAME }} --access-key ${{ secrets.LOFT_ACCESS_KEY }}
 
           ## Create Instance
-          vcluster create gobg-preview-${{ github.event.pull_request.number }} \
+          vcluster create gobg-preview-${{ github.event.pull_request.number }} --distro k3s \
           --project ${{ secrets.VCLUSTER_PRO_PROJECT }} --recreate --driver platform --template ${{ secrets.VCLUSTER_PRO_TEMPLATE }} \
           --set-param prnumber="${{ github.event.pull_request.number }}" \
           --set-param akuityKeyId="${{ secrets.AKUITY_KEY_ID }}" \
