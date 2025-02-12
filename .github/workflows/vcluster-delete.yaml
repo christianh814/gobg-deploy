@@ -16,14 +16,14 @@ jobs:
         run: |
           ## Download the Akuity CLI
           arch=$(uname -m)
-          ver=v0.15.0
+          ver=v0.20.1
           [[ ${arch} == "x86_64" ]] && arch=amd64
           [[ ${arch} == "aarch64" ]] && arch=arm64
           wget -O /usr/local/bin/akuity -q "https://dl.akuity.io/akuity-cli/${ver}/linux/${arch}/akuity"
           chmod +x /usr/local/bin/akuity
 
           ## Download vCluster CLI
-          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/download/v0.20.0-beta.12/vcluster-linux-amd64"
+          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/download/v0.22.4/vcluster-linux-amd64"
           mv vcluster /usr/local/bin
           chmod +x /usr/local/bin/vcluster
 
