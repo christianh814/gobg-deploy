@@ -38,4 +38,4 @@ jobs:
           vcluster platform login --insecure ${{ secrets.VCLUSTER_PRO_HOSTNAME }} --access-key ${{ secrets.LOFT_ACCESS_KEY }}
 
           ## Delete vCluster Instance
-          vcluster platform delete gobg-preview-${{ github.event.pull_request.number }} --project ${{ secrets.VCLUSTER_PRO_PROJECT }} --wait=false
+          vcluster platform delete vcluster gobg-preview-${{ github.event.pull_request.number }} --project ${{ secrets.VCLUSTER_PRO_PROJECT }} --wait=false
